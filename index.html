@@ -25,36 +25,15 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--cinza-claro); color: var(--texto); min-height: 100vh; }
 
-  /* BANNER DEMO */
-  .banner-demo {
-    background: var(--preto); border-bottom: 2px solid var(--laranja);
-    padding: 8px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .banner-demo-esq { display: flex; align-items: center; gap: 10px; }
-  .badge-demo { background: var(--laranja); border-radius: 4px; padding: 3px 8px; font-size: 10px; font-weight: 700; color: white; letter-spacing: 0.5px; white-space: nowrap; }
-  .banner-demo-txt { font-size: 12px; color: rgba(255,255,255,0.7); }
-  .banner-demo-txt strong { color: white; }
-  .btn-whats { display: flex; align-items: center; gap: 6px; background: #25d366; color: white; border-radius: 5px; padding: 5px 12px; font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
-
   /* HEADER */
   .header { background: var(--preto); padding: 0 24px; display: flex; align-items: center; height: 56px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .header-logo { display: flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-weight: 500; font-size: 16px; letter-spacing: 1.5px; color: white; }
-  .header-logo-icon { width: 32px; height: 32px; background: var(--laranja); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .header-logo { display: flex; align-items: center; gap: 10px; }
 
   /* HERO */
   .hero { background: var(--preto); padding: 48px 24px 40px; text-align: center; }
   .hero-badge { display: inline-block; background: var(--laranja-claro); color: var(--laranja); border: 1px solid var(--laranja-borda); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px; }
   .hero h1 { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 500; color: white; letter-spacing: 2px; margin-bottom: 10px; }
   .hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; }
-
-  /* CONTADOR DEMO */
-  .contador-demo { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 16px; margin-bottom: 32px; }
-  .contador-demo-dots { display: flex; gap: 5px; }
-  .dot { width: 12px; height: 12px; border-radius: 50%; }
-  .dot-usado { background: var(--laranja); }
-  .dot-livre { background: rgba(255,255,255,0.2); }
-  .contador-demo-txt { font-size: 12px; color: rgba(255,255,255,0.6); }
-  .contador-demo-txt strong { color: white; }
 
   /* CARDS DE MÓDULOS */
   .modulos { max-width: 880px; margin: 0 auto; padding: 32px 16px 60px; }
@@ -77,8 +56,6 @@
   .modulo-seta { position: absolute; bottom: 14px; right: 14px; color: var(--borda); font-size: 16px; transition: all 0.15s; }
   .modulo-card:hover .modulo-seta { color: var(--laranja); transform: translateX(2px); }
 
-  .modulo-bloqueado { position: absolute; top: 10px; right: 10px; background: var(--laranja-claro); color: var(--laranja); border: 1px solid var(--laranja-borda); border-radius: 10px; padding: 2px 7px; font-size: 10px; font-weight: 700; }
-
   /* RODAPÉ */
   .rodape { background: var(--preto); padding: 20px 24px; text-align: center; }
   .rodape p { font-size: 11px; color: rgba(255,255,255,0.3); }
@@ -86,7 +63,6 @@
 
   @media (max-width: 600px) {
     .hero h1 { font-size: 20px; }
-    .banner-demo-txt { display: none; }
     .modulos-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -109,7 +85,6 @@
 
   window.addEventListener('load', async () => {
     try {
-      // Sincroniza config (profissional + precos) do Firebase para localStorage
       const [profDoc, precosDoc] = await Promise.all([
         getDoc(doc(db, 'config', 'profissional')),
         getDoc(doc(db, 'config', 'precos'))
@@ -117,7 +92,6 @@
       if (profDoc.exists()) localStorage.setItem('jf_profissional', JSON.stringify(profDoc.data()));
       if (precosDoc.exists()) localStorage.setItem('jf_precos', JSON.stringify(precosDoc.data()));
 
-      // Sincroniza orçamentos (alertas)
       const snap = await getDocs(collection(db, 'orcamentos'));
       if (!snap.empty) {
         const orcs = [];
@@ -131,21 +105,6 @@
 </head>
 <body>
 
-<!-- BANNER DEMO -->
-<div class="banner-demo">
-  <div class="banner-demo-esq">
-    <span class="badge-demo">Versão Demo</span>
-    <span class="banner-demo-txt">Versão de demonstração — <strong>3 orçamentos</strong> · exportação bloqueada</span>
-  </div>
-  <a href="https://wa.me/5516993462652?text=Ol%C3%A1%21+Gostaria+de+adquirir+a+vers%C3%A3o+completa+do+sistema+JF+Calhas." target="_blank" class="btn-whats">
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-      <path d="M6.5 1C3.46 1 1 3.46 1 6.5c0 .97.26 1.88.7 2.67L1 12l2.93-.69A5.5 5.5 0 0 0 6.5 12C9.54 12 12 9.54 12 6.5S9.54 1 6.5 1z" stroke="white" stroke-width="1.2" fill="none"/>
-      <path d="M4.5 4.8c.1.3.4 1 .4 1s-.1.2-.3.5c-.2.3-.1.5.1.7.4.4 1 .9 1.7 1.1.3.1.5 0 .7-.2l.3-.4c.2-.2.4-.2.6-.1l.9.4c.2.1.3.3.2.5-.2.6-.8 1-1.4.9C5.8 9 4 7.2 3.8 5.5c-.1-.6.3-1.2.9-1.4.2-.1.4 0 .5.2l-.7.5z" fill="white"/>
-    </svg>
-    Quero a versão completa
-  </a>
-</div>
-
 <!-- HEADER -->
 <div class="header">
   <div class="header-logo">
@@ -158,15 +117,6 @@
   <div class="hero-badge">Sistema de Orçamentos</div>
   <h1>Calhas · Rufos · Telhados</h1>
   <p>Crie orçamentos profissionais em minutos, controle seus clientes e nunca perca um follow-up.</p>
-
-  <div class="contador-demo" id="contador-demo">
-    <div class="contador-demo-dots" id="dots-demo">
-      <div class="dot dot-livre"></div>
-      <div class="dot dot-livre"></div>
-      <div class="dot dot-livre"></div>
-    </div>
-    <span class="contador-demo-txt" id="txt-contador"><strong>3 orçamentos</strong> disponíveis nesta demo</span>
-  </div>
 </div>
 
 <!-- MÓDULOS -->
@@ -234,7 +184,7 @@
       <div class="modulo-seta">→</div>
     </a>
 
-    <a href="jf-calhas-etapa5-relatorio.html" class="modulo-card preto" onclick="return verificarExportacao(event)">
+    <a href="jf-calhas-etapa5-relatorio.html" class="modulo-card preto">
       <div class="modulo-icone" style="background:#f0ede8;">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M10 3V13M10 13L7 10M10 13L13 10" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -244,7 +194,6 @@
       <div class="modulo-num">05 — RELATÓRIO</div>
       <div class="modulo-nome">Exportar serviço aprovado</div>
       <div class="modulo-desc">Gere o relatório final do serviço aprovado em PDF</div>
-      <span class="modulo-bloqueado">Demo — bloqueado</span>
       <div class="modulo-seta">→</div>
     </a>
 
@@ -254,74 +203,10 @@
 <!-- RODAPÉ -->
 <div class="rodape">
   <p>
-    <strong>JF // CALHAS</strong> — Sistema de Orçamentos · Versão Demonstração<br>
-    Para adquirir a versão completa fale com Jefferson: <strong>16 99346-2652</strong>
+    <strong>JF // CALHAS</strong> — Sistema de Orçamentos<br>
+    Jefferson Vargas · <strong>(16) 99346-2652</strong>
   </p>
 </div>
 
-<script>
-const WHATS = '5516993462652';
-const MSG = encodeURIComponent('Olá! Gostaria de adquirir a versão completa do sistema JF Calhas.');
-const MAX = 3;
-
-function atualizarContador() {
-  try {
-    const alertas = JSON.parse(localStorage.getItem('jf_alertas') || '[]');
-    const usados = Math.min(alertas.length, MAX);
-    const restam = MAX - usados;
-
-    const dots = document.getElementById('dots-demo');
-    dots.innerHTML = Array.from({length: MAX}, (_,i) =>
-      `<div class="dot ${i < usados ? 'dot-usado' : 'dot-livre'}"></div>`
-    ).join('');
-
-    const txt = document.getElementById('txt-contador');
-    if (restam === 0) {
-      txt.innerHTML = `<strong style="color:#d4571a">Limite atingido</strong> — adquira a versão completa`;
-    } else {
-      txt.innerHTML = `<strong>${restam} orçamento${restam > 1 ? 's' : ''}</strong> disponíve${restam > 1 ? 'is' : 'l'} nesta demo`;
-    }
-  } catch(e) {}
-}
-
-function verificarExportacao(e) {
-  e.preventDefault();
-  const modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:"DM Sans",sans-serif;';
-  modal.innerHTML = `
-    <div style="background:white;border-radius:10px;width:100%;max-width:400px;overflow:hidden;">
-      <div style="background:#1a1a1a;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="background:#d4571a;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;color:white;">DEMO</div>
-          <span style="color:white;font-size:13px;font-weight:600;">Módulo bloqueado</span>
-        </div>
-        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:18px;">✕</button>
-      </div>
-      <div style="padding:20px;">
-        <p style="font-size:13px;color:#444;line-height:1.7;margin-bottom:16px;">
-          A exportação de relatórios está disponível apenas na versão completa do sistema.
-        </p>
-        <div style="background:#f5ede8;border:1px solid #e8b49a;border-radius:6px;padding:12px;margin-bottom:16px;font-size:12px;color:#666;line-height:1.8;">
-          ✓ Relatórios ilimitados em PDF<br>
-          ✓ Sem marca d'água<br>
-          ✓ Orçamentos ilimitados<br>
-          ✓ Todos os módulos desbloqueados
-        </div>
-        <a href="https://wa.me/${WHATS}?text=${MSG}" target="_blank"
-          style="display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:white;border-radius:6px;padding:11px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:6px;">
-          Falar no WhatsApp — 16 99346-2652
-        </a>
-        <button onclick="this.closest('[style*=fixed]').remove()"
-          style="width:100%;padding:9px;background:white;color:#666;border:1px solid #e0ddd8;border-radius:6px;font-size:12px;cursor:pointer;">
-          Continuar testando
-        </button>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
-  return false;
-}
-
-atualizarContador();
-</script>
 </body>
 </html>
